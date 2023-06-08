@@ -37,6 +37,21 @@
             android:theme="@style/Theme.BTL_Android_62TH1.NoActionBar"
             >
         </activity>
+        <activity
+            android:name=".ActivityHomeScreen"
+            android:theme="@style/Theme.BTL_Android_62TH1.NoActionBar"
+            >
+        </activity>
+        <activity
+            android:name=".QuestionManagementActivity"
+            android:theme="@style/Theme.BTL_Android_62TH1.NoActionBar"
+            >
+        </activity>
+        <activity
+            android:name=".QuizActivity"
+            android:theme="@style/Theme.BTL_Android_62TH1.NoActionBar"
+            >
+        </activity>
     </application>
 
 </manifest>

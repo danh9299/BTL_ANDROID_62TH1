@@ -45,6 +45,8 @@ public class ActivityLogin extends AppCompatActivity {
                     if (login(username, password)) {
                         Toast.makeText(ActivityLogin.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                         // Tiến hành xử lý sau khi đăng nhập thành công
+                        Intent intent = new Intent(ActivityLogin.this,ActivityHomeScreen.class);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(ActivityLogin.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                     }

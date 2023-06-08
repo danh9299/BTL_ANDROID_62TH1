@@ -14,7 +14,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        anhxa();
+        btnLogin = findViewById(R.id.btnLogin);
+        btnSignin = findViewById(R.id.btnSignin);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,10 +34,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void anhxa(){//anh xa
-        btnLogin = findViewById(R.id.btnLogin);
-        btnSignin = findViewById(R.id.btnSignin);
 
-    }
 
 }
