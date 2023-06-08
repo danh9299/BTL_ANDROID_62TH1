@@ -33,4 +33,8 @@ public class Question {
     public int getCorrectAnswer() {
         return correctAnswer;
     }
+    @Override
+    public String toString() {
+        return "Question: " + questionText;
+    }
 }

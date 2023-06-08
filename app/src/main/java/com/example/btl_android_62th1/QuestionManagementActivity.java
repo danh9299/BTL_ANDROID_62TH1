@@ -3,17 +3,25 @@ package com.example.btl_android_62th1;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.text.TextUtils;
-
+import android.widget.ListView;
+import android.widget.ArrayAdapter;
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.AdapterView;
+import java.util.ArrayList;
+import java.util.List;
+
+
 
 public class QuestionManagementActivity extends AppCompatActivity {
-
+    private ListView questionListView;
+    private ArrayAdapter<Question> questionAdapter;
     private EditText etQuestionText;
     private EditText etOption1;
     private EditText etOption2;
@@ -37,12 +45,26 @@ public class QuestionManagementActivity extends AppCompatActivity {
         etCorrectAnswer = findViewById(R.id.etCorrectAnswer);
         btnAddQuestion = findViewById(R.id.btnAddQuestion);
         btnDeleteAllQuestions = findViewById(R.id.btnDeleteAllQuestions);
+
+        questionListView = findViewById(R.id.questionListView);
+        loadQuestionList();
+
+        questionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Xử lý khi một câu hỏi được chọn trong ListView
+                Question question = (Question) parent.getItemAtPosition(position);
+                populateFieldsWithQuestion(question);
+            }
+        });
+
         btnDeleteAllQuestions.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 clearAllQuestions();
             }
         });
+
         btnAddQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +72,41 @@ public class QuestionManagementActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void loadQuestionList() {
+        List<Question> questionList = new ArrayList<>();
+
+        // Thực hiện truy vấn dữ liệu từ cơ sở dữ liệu
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("questions", null, null, null, null, null, null);
+
+        // Kiểm tra xem có câu hỏi nào không
+        if (cursor.getCount() > 0) {
+            // Đọc dữ liệu từ con trỏ và thêm vào danh sách câu hỏi
+            while (cursor.moveToNext()) {
+                // Đọc thông tin câu hỏi từ con trỏ và tạo đối tượng Question
+                String questionText = cursor.getString(cursor.getColumnIndex("question_text"));
+                String option1 = cursor.getString(cursor.getColumnIndex("option1"));
+                String option2 = cursor.getString(cursor.getColumnIndex("option2"));
+                String option3 = cursor.getString(cursor.getColumnIndex("option3"));
+                int correctAnswer = cursor.getInt(cursor.getColumnIndex("correct_answer"));
+
+                Question question = new Question(questionText, option1, option2, option3, correctAnswer);
+                questionList.add(question);
+            }
+        }
+
+        // Đóng con trỏ và cơ sở dữ liệu
+        cursor.close();
+        db.close();
+
+        // Tạo adapter và gán danh sách câu hỏi vào adapter
+        questionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, questionList);
+
+        // Gán adapter cho ListView để hiển thị danh sách câu hỏi
+        questionListView.setAdapter(questionAdapter);
+    }
+
 
     private void addQuestion() {
 
@@ -84,6 +141,10 @@ public class QuestionManagementActivity extends AppCompatActivity {
 
         if (newRowId != -1) {
             Toast.makeText(this, "Question added successfully.", Toast.LENGTH_SHORT).show();
+            // Cập nhật toàn bộ danh sách
+            questionAdapter.clear();
+            loadQuestionList();
+
             clearFields();
         } else {
             Toast.makeText(this, "Failed to add question.", Toast.LENGTH_SHORT).show();
@@ -101,12 +162,20 @@ public class QuestionManagementActivity extends AppCompatActivity {
         etOption3.setText("");
         etCorrectAnswer.setText("");
     }
+    private void populateFieldsWithQuestion(Question question) {
+        etQuestionText.setText(question.getQuestionText());
+        etOption1.setText(question.getOption1());
+        etOption2.setText(question.getOption2());
+        etOption3.setText(question.getOption3());
+        etCorrectAnswer.setText(String.valueOf(question.getCorrectAnswer()));
+    }
 
 private void clearAllQuestions(){
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     int rowsDeleted = db.delete("questions", null, null);
     if (rowsDeleted > 0) {
         Toast.makeText(this, "Đã xóa " + rowsDeleted + " câu hỏi", Toast.LENGTH_SHORT).show();
+        questionAdapter.clear();
     } else {
         Toast.makeText(this, "Không có câu hỏi để xóa", Toast.LENGTH_SHORT).show();
     }
