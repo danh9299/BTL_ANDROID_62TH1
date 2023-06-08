@@ -28,6 +28,8 @@ public class QuestionManagementActivity extends AppCompatActivity {
     private EditText etOption3;
     private EditText etCorrectAnswer;
     private Button btnAddQuestion;
+    private Button btnUpdateQuestion;
+    private Button btnDeleteQuestion;
     private Button btnDeleteAllQuestions;
     private QuizDatabaseHelper dbHelper;
 
@@ -45,7 +47,8 @@ public class QuestionManagementActivity extends AppCompatActivity {
         etCorrectAnswer = findViewById(R.id.etCorrectAnswer);
         btnAddQuestion = findViewById(R.id.btnAddQuestion);
         btnDeleteAllQuestions = findViewById(R.id.btnDeleteAllQuestions);
-
+        btnDeleteQuestion = findViewById(R.id.btnDeleteQuestion);
+        btnUpdateQuestion = findViewById(R.id.btnUpdateQuestion);
         questionListView = findViewById(R.id.questionListView);
         loadQuestionList();
 
@@ -69,6 +72,20 @@ public class QuestionManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addQuestion();
+            }
+        });
+
+        btnUpdateQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateQuestion();
+            }
+        });
+
+        btnDeleteQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteQuestion();
             }
         });
     }
@@ -107,7 +124,66 @@ public class QuestionManagementActivity extends AppCompatActivity {
         questionListView.setAdapter(questionAdapter);
     }
 
+    private void deleteQuestion(){
+        String questionText = etQuestionText.getText().toString().trim();
 
+        if (TextUtils.isEmpty(questionText)) {
+            Toast.makeText(this, "Vui lòng chọn câu hỏi để xóa.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int rowsAffected = db.delete("questions", "question_text = ?", new String[]{questionText});
+
+        if (rowsAffected > 0) {
+            Toast.makeText(this, "Xóa câu hỏi thành công.", Toast.LENGTH_SHORT).show();
+            questionAdapter.clear();
+            loadQuestionList();
+            clearFields();
+        } else {
+            Toast.makeText(this, "Xóa câu hỏi thất bại.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    private void updateQuestion(){
+        try {
+            String questionText = etQuestionText.getText().toString().trim();
+            String option1 = etOption1.getText().toString().trim();
+            String option2 = etOption2.getText().toString().trim();
+            String option3 = etOption3.getText().toString().trim();
+
+            if (TextUtils.isEmpty(questionText) || TextUtils.isEmpty(option1) ||
+                    TextUtils.isEmpty(option2) || TextUtils.isEmpty(option3)) {
+                Toast.makeText(this, "Vui lòng nhập đủ thông tin!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int correctAnswer = Integer.parseInt(etCorrectAnswer.getText().toString().trim());
+
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put("question_text", questionText);
+            values.put("option1", option1);
+            values.put("option2", option2);
+            values.put("option3", option3);
+            values.put("correct_answer", correctAnswer);
+
+            int rowsAffected = db.update("questions", values, "question_text = ?", new String[]{questionText});
+
+            if (rowsAffected > 0) {
+                Toast.makeText(this, "Cập nhật câu hỏi mới thành công.", Toast.LENGTH_SHORT).show();
+                questionAdapter.clear();
+                loadQuestionList();
+                clearFields();
+            } else {
+                Toast.makeText(this, "Cập nhật thất bại.", Toast.LENGTH_SHORT).show();
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Đáp án phải là dạng số 1, 2, hoặc 3.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
     private void addQuestion() {
 
         try {
@@ -140,14 +216,14 @@ public class QuestionManagementActivity extends AppCompatActivity {
         long newRowId = db.insert("questions", null, values);
 
         if (newRowId != -1) {
-            Toast.makeText(this, "Question added successfully.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Thêm mới thành công.", Toast.LENGTH_SHORT).show();
             // Cập nhật toàn bộ danh sách
             questionAdapter.clear();
             loadQuestionList();
 
             clearFields();
         } else {
-            Toast.makeText(this, "Failed to add question.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Thêm mới thất bại.", Toast.LENGTH_SHORT).show();
         }
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Đáp án phải là dạng số 1, 2, hoặc 3.", Toast.LENGTH_SHORT).show();

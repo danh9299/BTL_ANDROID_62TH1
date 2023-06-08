@@ -29,4 +29,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_DELETE_QUESTIONS_TABLE);
         onCreate(db);
     }
+
+
+
 }

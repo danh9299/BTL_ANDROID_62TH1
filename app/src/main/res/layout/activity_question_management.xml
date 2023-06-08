@@ -9,7 +9,7 @@
         android:id="@+id/etQuestionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nội dung Câu Hsỏi" />
+        android:hint="Nội dung Câu Hỏi" />
 
     <EditText
         android:id="@+id/etOption1"
