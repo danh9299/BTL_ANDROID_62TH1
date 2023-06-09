@@ -3,37 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
-
+    android:padding="16dp"
+    android:background="@drawable/simple">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QUẢN LÝ CÂU HỎI"
+        android:textSize="30sp"
+        android:textColor="#DB4746"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        />
     <EditText
         android:id="@+id/etQuestionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nội dung Câu Hỏi" />
+        android:hint="Nhập nội dung câu hỏi" />
 
     <EditText
         android:id="@+id/etOption1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Đáp án 1" />
+        android:hint="Nhập đáp án 1" />
 
     <EditText
         android:id="@+id/etOption2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Đáp án 2" />
+        android:hint="Nhập đáp án 2" />
 
     <EditText
         android:id="@+id/etOption3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Đáp án 3" />
+        android:hint="Nhập đáp án 3" />
 
     <EditText
         android:id="@+id/etCorrectAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Đáp án đúng (1, 2, or 3)" />
+        android:hint="Chọn đáp án đúng (1, 2, or 3)" />
 
     <Button
         android:id="@+id/btnAddQuestion"
@@ -57,6 +66,8 @@
         android:id="@+id/btnDeleteAllQuestions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#DBDB51"
+        android:textColor="#000000"
         android:text="Xóa tất cả câu hỏi" />
     <ListView
         android:id="@+id/questionListView"

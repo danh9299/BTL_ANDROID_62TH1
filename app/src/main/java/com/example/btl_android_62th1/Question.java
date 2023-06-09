@@ -35,6 +35,6 @@ public class Question {
     }
     @Override
     public String toString() {
-        return "Question: " + questionText;
+        return "Câu hỏi: " + questionText;
     }
 }

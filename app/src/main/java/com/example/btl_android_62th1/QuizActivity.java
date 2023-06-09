@@ -73,7 +73,7 @@ public class QuizActivity extends AppCompatActivity {
         int selectedOptionId = rgOptions.getCheckedRadioButtonId();
 
         if (selectedOptionId == -1) {
-            Toast.makeText(this, "Please select an answer.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Bạn phải chọn đáp án đã.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -97,7 +97,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private void showQuizResult() {
         float percentage = (float) score / questions.size() * 100;
-        String result = "Quiz Complete\nScore: " + score + "/" + questions.size() + " (" + percentage + "%)";
+        String result = "Bài thi kết thúc\nĐiểm của bạn là: " + score + "/" + questions.size() + " (" + percentage + "%)";
 
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
         finish();
